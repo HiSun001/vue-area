@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="Generator" content="EditPlus®">
+        <meta name="Author" content="">
+        <meta name="Keywords" content="">
+        <meta name="Description" content="">
+        <title>vue省市区联系Demo</title>
+        <style>
+            a{text-decoration: none;}
+        </style>
+    </head>
+    <body>
+        
+        <div id="app">
+            <template>
+                <select v-model="province">
+                    <option v-for="lst in provinceList" :value="lst.name">{{lst.name}}</option>
+                </select>
+                <select v-model="city">
+                    <option v-for="lst in cityList" :value="lst.name">{{lst.name}}</option>
+                </select>
+                <select v-model="area">
+                    <option v-for="lst in areaList" :value="lst">{{lst}}</option>
+                </select>
+            </template>
+            <div>当前选择的地区是：<br/>{{province}}<br/>{{city}}<br/>{{area}}</div>
+        </div>
+        
+        <script src="./js/vue.js"></script>
+        <script src="./js/data.js"></script>
+        <script>
+
+
+            new Vue({
+                el: "#app",
+                data: {
+                    provinceList: [], // 省份列表
+                    province: "", // 选中省份值
+                    cityList: [], // 城市列表
+                    city: "", // 选中城市
+                    areaList: [], // 地区列表
+                    area: "" // 选中地区
+                },
+                mounted: function(){
+                    this.provinceList = provinceList;
+                    this.province = this.provinceList[0]["name"];
+                },
+                methods: {
+                    // 获取某个地区的key
+                    getKey: function(arr,str) {
+                        var place;
+                        for(k in arr){
+                            place = arr[k].name;
+                            if(place == str){
+                                return k;
+                            }
+                        }
+                    }
+                },
+                watch: {
+                    province: function(value) {
+                        var _this = this;
+                        var index = _this.getKey(_this.provinceList,value);
+                        
+                        _this.cityList = _this.provinceList[index].cityList;
+                        _this.city = _this.cityList[0]["name"];
+                    },
+                    city: function(value) {
+                        var _this = this;
+                        var index = _this.getKey(_this.cityList,value);
+                        _this.areaList = _this.cityList[index].areaList;
+                        _this.area = _this.areaList[0];
+                    },
+                    area: function(value) {
+                        var _this = this;
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
